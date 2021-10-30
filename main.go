@@ -27,6 +27,9 @@ func main() {
 	// }
 	// elastic.UpSertEntireDoc(esclient, "1", student)
 	// elastic.UpdateByID(esclient, "1", 100, 77.99)
+
+	//Please make sure refresh is happened before update more resarch required here
+	//https://www.elastic.co/guide/en/elasticsearch/reference/7.0/indices-refresh.html
 	elastic.UpdateByQuery(esclient, "Arjun", 1002, 77.99)
 
 	//elastic.DeleteByID(esclient, "1")
