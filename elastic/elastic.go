@@ -193,6 +193,25 @@ func UpdateByID(esclient *elastic.Client, id string, age int64, averagseScore fl
 	log.Println("[Elastic][UpdateByID with particular id]Update Successful")
 }
 
+func UpdateByQuery(esclient *elastic.Client, name string, age int64, averagseScore float64) {
+	ctx := context.Background()
+
+	query := elastic.NewBoolQuery()
+	query = query.Must(elastic.NewMatchQuery("name", name))
+
+	updateScript := elastic.NewScriptInline("ctx._source.age = params.new_age;ctx._source.average_score = params.new_average_score").
+		Param("new_age", age).
+		Param("new_average_score", averagseScore)
+
+	_, err := esclient.UpdateByQuery().Query(query).Index("students").Script(updateScript).Do(ctx)
+
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println("[Elastic][UpdateByQuery]Update Successful")
+}
+
 func DeleteByID(esclient *elastic.Client, id string) {
 	ctx := context.Background()
 
